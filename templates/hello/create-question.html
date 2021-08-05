@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Create New Poll
+{% endblock %}
+
+{% block content %}
+
+</style>
+<div class = "mt-4">
+    <p><a href="{% url 'questions_list' %}">Back to Questions</a></p>
+    <h2>Add New Poll</h2>
+    <form action="" method="post" style="max-width:600px">
+        {% csrf_token %}
+       <p>{{form.question_text | as_crispy_field}}</p>
+        <button  type="submit" class="btn btn-primary">Add</button>
+    </form>
+</div>
+
+
+{% endblock %}
