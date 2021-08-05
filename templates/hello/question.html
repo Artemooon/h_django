@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block title %}
+{{question.question_text}}
+{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <p class="text-center"><a href="{% url 'questions_list' %}">Back to Questions</a></p>
+    <div class="col-10 mt-2">
+    <p><b>{{question.question_text}}</b></p><br>
+    {% if choices|length >= 2 %}
+    <form method="POST" id="question_form" action="">
+        {% csrf_token %}
+        {% if is_voted %}
+        {% for choice in choices %}
+        {% if request.user in choice.votes.all %}
+        <div class="form-check">
+            {{choice.votes_amount}} vot{{ choice.votes_amount|pluralize:"e,es" }} -- <input name="q{{question.id}}"
+                                                                                            value="c{{choice.id}}"
+                                                                                            id="{{choice.id}}"
+                                                                                            class="form-check-input"
+                                                                                            type="radio" checked><label
+                class="form-check-label" for="{{choice.id}}">{{choice.choice_text}}</label><br><br>
+        </div>
+        {% else %}
+        <div class="form-check">
+            {{choice.votes_amount}} vot{{ choice.votes_amount|pluralize:"e,es" }} -- <input name="q{{question.id}}"
+                                                                                            value="c{{choice.id}}"
+                                                                                            id="{{choice.id}}"
+                                                                                            class="form-check-input"
+                                                                                            type="radio" disabled><label
+                class="form-check-label" for="{{choice.id}}">{{choice.choice_text}}</label><br><br>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        {% for choice in choices %}
+        <div class="form-check">
+            <input name="q{{question.id}}" value="c{{choice.id}}" id="{{choice.id}}" class="form-check-input"
+                   type="radio"><label class="form-check-label" for="{{choice.id}}">{{choice.choice_text}}</label><br><br>
+        </div>
+        {% endfor %}
+        <br>
+        <button type="submit" name="finish-question" value="finish-question-btn" class="btn btn-success">Answer</button>
+        {% endif %}
+        <br>
+    </form>
+    </div>
+    <div class="col-2 mt-2">
+        <small>{{question.pub_date |date:"d.m.Y H:i" }}</small>
+    </div>
+    {% else %}
+    <p>Create at least 2 choices to open this poll</p>
+    {% endif %}
+</div>
+
+
+{% endblock %}
