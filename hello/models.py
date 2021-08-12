@@ -27,6 +27,7 @@ class Post(models.Model):
     # There are 2 options for author field, I think with CharField it will be faster, but with ForeignKey it has author exists validation
     author = models.ForeignKey(User, on_delete = models.CASCADE)
     publication_date = models.DateTimeField(auto_now=True)
+    categories = models.ManyToManyField(Category, related_name = "categories")
     
     def __str__(self):
         return self.title
@@ -44,7 +45,7 @@ class Comment(models.Model):
     
 class Category(models.Model):
     category_name = models.CharField(max_length=200)
-    post = models.ManyToManyField(Post,related_name = "category_post")
+    slug = models.SlugField()
     
     def __str__(self):
         return str(self.category_name)
